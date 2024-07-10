@@ -5,11 +5,6 @@ async function getAll(req, res) {
   try {
     const users = await User.findAll();
 
-    if (users.length === 0) {
-      SuccessResponse.message = "No user is available";
-      return res.status(404).json(SuccessResponse);
-    }
-
     SuccessResponse.message = "Successfully fetched all users";
     SuccessResponse.data = users;
 
