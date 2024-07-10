@@ -3,14 +3,14 @@ const express = require("express");
 const { validateCreateRequest } = require("../../middlewares/task-middlewares");
 const {
   getAllActive,
-  get,
+  getActive,
   create,
 } = require("../../controllers/task-controller");
 
 const router = express.Router();
 
 router.get("/", getAllActive);
-router.get("/:id", get);
+router.get("/:id", getActive);
 router.post("/", validateCreateRequest, create);
 
 module.exports = router;
