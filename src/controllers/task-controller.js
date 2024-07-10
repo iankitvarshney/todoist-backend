@@ -158,10 +158,53 @@ async function create(req, res) {
   }
 }
 
+async function update(req, res) {
+  try {
+    const response = await Task.update(req.body, {
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    if (response[0] === 0) {
+      ErrorResponse.message = `No task is available with id ${req.params.id}`;
+      ErrorResponse.data = {};
+      return res.status(404).json(ErrorResponse);
+    }
+
+    const task = await Task.findByPk(req.params.id);
+
+    SuccessResponse.message = "Successfully updated a task";
+    SuccessResponse.data = task;
+
+    return res.status(200).json(SuccessResponse);
+  } catch (error) {
+    if (error.name === "SequelizeUniqueConstraintError") {
+      ErrorResponse.message = error.errors[0].message;
+      ErrorResponse.error = error;
+
+      return res.status(400).json(ErrorResponse);
+    }
+
+    if (error.name === "SequelizeDatabaseError") {
+      ErrorResponse.message = "Some parameter value is not correct";
+      ErrorResponse.error = error;
+
+      return res.status(400).json(ErrorResponse);
+    }
+
+    ErrorResponse.message = "Something went wrong while updating a task";
+    ErrorResponse.error = error;
+
+    return res.status(500).json(ErrorResponse);
+  }
+}
+
 module.exports = {
   getAll,
   getAllActive,
   get,
   getActive,
   create,
+  update,
 };
