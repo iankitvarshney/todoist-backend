@@ -83,8 +83,57 @@ async function create(req, res) {
   }
 }
 
+async function update(req, res) {
+  try {
+    const response = await Section.update(req.body, {
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    if (Object.keys(req.body).length === 0) {
+      SuccessResponse.message = "Request body should not be empty";
+      SuccessResponse.data = {};
+      return res.status(400).json(SuccessResponse);
+    }
+
+    if (response[0] === 0) {
+      SuccessResponse.message = `No section is available with id ${req.params.id}`;
+      SuccessResponse.data = {};
+      return res.status(404).json(SuccessResponse);
+    }
+
+    const section = await Section.findByPk(req.params.id);
+
+    SuccessResponse.message = "Successfully updated a section";
+    SuccessResponse.data = section;
+
+    return res.status(200).json(SuccessResponse);
+  } catch (error) {
+    if (error.name === "SequelizeUniqueConstraintError") {
+      ErrorResponse.message = error.errors[0].message;
+      ErrorResponse.error = error;
+
+      return res.status(400).json(ErrorResponse);
+    }
+
+    if (error.name === "SequelizeDatabaseError") {
+      ErrorResponse.message = "Some parameter value is not correct";
+      ErrorResponse.error = error;
+
+      return res.status(400).json(ErrorResponse);
+    }
+
+    ErrorResponse.message = "Something went wrong while updating a section";
+    ErrorResponse.error = error;
+
+    return res.status(500).json(ErrorResponse);
+  }
+}
+
 module.exports = {
   getAll,
   get,
   create,
+  update,
 };

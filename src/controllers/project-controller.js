@@ -105,6 +105,13 @@ async function update(req, res) {
 
     return res.status(200).json(SuccessResponse);
   } catch (error) {
+    if (error.name === "SequelizeUniqueConstraintError") {
+      ErrorResponse.message = error.errors[0].message;
+      ErrorResponse.error = error;
+
+      return res.status(400).json(ErrorResponse);
+    }
+
     if (error.name === "SequelizeDatabaseError") {
       ErrorResponse.message = "Some parameter value is not correct";
       ErrorResponse.error = error;
