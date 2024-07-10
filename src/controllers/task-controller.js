@@ -36,6 +36,48 @@ async function getAll(req, res) {
   }
 }
 
+async function create(req, res) {
+  try {
+    const task = await Task.create({
+      content: req.body.content,
+      description: req.body.description,
+      order: req.body.order,
+      priority: req.body.priority,
+      due: req.body.due,
+      url: req.body.url,
+      parentId: req.body.parentId,
+      projectId: req.body.projectId,
+      sectionId: req.body.sectionId,
+      creatorId: req.body.creatorId,
+    });
+
+    SuccessResponse.message = "Successfully created a task";
+    SuccessResponse.data = task;
+
+    return res.status(201).json(SuccessResponse);
+  } catch (error) {
+    if (error.name === "SequelizeUniqueConstraintError") {
+      ErrorResponse.message = error.errors[0].message;
+      ErrorResponse.error = error;
+
+      return res.status(400).json(ErrorResponse);
+    }
+
+    if (error.name === "SequelizeDatabaseError") {
+      ErrorResponse.message = "Some parameter value is not correct";
+      ErrorResponse.error = error;
+
+      return res.status(400).json(ErrorResponse);
+    }
+
+    ErrorResponse.message = "Something went wrong while creating a task";
+    ErrorResponse.error = error;
+
+    return res.status(500).json(ErrorResponse);
+  }
+}
+
 module.exports = {
   getAll,
+  create,
 };
