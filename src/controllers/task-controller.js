@@ -36,6 +36,28 @@ async function getAll(req, res) {
   }
 }
 
+async function get(req, res) {
+  try {
+    const task = await Task.findByPk(req.params.id);
+
+    if (task === null) {
+      SuccessResponse.message = `No task is available with id ${req.params.id}`;
+      SuccessResponse.data = {};
+      return res.status(404).json(SuccessResponse);
+    }
+
+    SuccessResponse.message = "Successfully fetched a task";
+    SuccessResponse.data = task;
+
+    return res.status(200).json(SuccessResponse);
+  } catch (error) {
+    ErrorResponse.message = "Something went wrong while fetching a task";
+    ErrorResponse.error = error;
+
+    return res.status(500).json(ErrorResponse);
+  }
+}
+
 async function create(req, res) {
   try {
     const task = await Task.create({
@@ -79,5 +101,6 @@ async function create(req, res) {
 
 module.exports = {
   getAll,
+  get,
   create,
 };
