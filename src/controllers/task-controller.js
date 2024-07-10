@@ -36,6 +36,39 @@ async function getAll(req, res) {
   }
 }
 
+async function getAllActive(req, res) {
+  try {
+    const filterArray = [{ isCompleted: false }];
+
+    if (req.query.projectId) {
+      filterArray.push({
+        projectId: req.query.projectId,
+      });
+    }
+    if (req.query.sectionId) {
+      filterArray.push({
+        sectionId: req.query.sectionId,
+      });
+    }
+
+    const tasks = await Task.findAll({
+      where: {
+        [Op.and]: filterArray,
+      },
+    });
+
+    SuccessResponse.message = "Successfully fetched all tasks";
+    SuccessResponse.data = tasks;
+
+    return res.status(200).json(SuccessResponse);
+  } catch (error) {
+    ErrorResponse.message = "Something went wrong while fetching all tasks";
+    ErrorResponse.error = error;
+
+    return res.status(500).json(ErrorResponse);
+  }
+}
+
 async function get(req, res) {
   try {
     const task = await Task.findByPk(req.params.id);
@@ -101,6 +134,7 @@ async function create(req, res) {
 
 module.exports = {
   getAll,
+  getAllActive,
   get,
   create,
 };
