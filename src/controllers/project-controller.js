@@ -17,6 +17,28 @@ async function getAll(req, res) {
   }
 }
 
+async function get(req, res) {
+  try {
+    const project = await Project.findByPk(req.params.id);
+
+    if (project === null) {
+      SuccessResponse.message = `No project is available with id ${req.params.id}`;
+      SuccessResponse.data = {};
+      return res.status(400).json(SuccessResponse);
+    }
+
+    SuccessResponse.message = "Successfully fetched a project";
+    SuccessResponse.data = project;
+
+    return res.status(200).json(SuccessResponse);
+  } catch (error) {
+    ErrorResponse.message = "Something went wrong while fetching a project";
+    ErrorResponse.error = error;
+
+    return res.status(500).json(ErrorResponse);
+  }
+}
+
 async function create(req, res) {
   try {
     const project = await Project.create({
@@ -58,5 +80,6 @@ async function create(req, res) {
 
 module.exports = {
   getAll,
+  get,
   create,
 };
