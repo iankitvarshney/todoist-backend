@@ -200,6 +200,37 @@ async function update(req, res) {
   }
 }
 
+async function close(req, res) {
+  try {
+    const response = await Task.update(
+      {
+        isCompleted: true,
+      },
+      {
+        where: {
+          [Op.and]: [{ id: req.params.id }, { isCompleted: false }],
+        },
+      }
+    );
+
+    if (response[0] === 0) {
+      ErrorResponse.message = `No opened task is available with id ${req.params.id}`;
+      ErrorResponse.data = {};
+      return res.status(404).json(ErrorResponse);
+    }
+
+    SuccessResponse.message = "Successfully closed a task";
+    SuccessResponse.data = {};
+
+    return res.status(200).json(SuccessResponse);
+  } catch (error) {
+    ErrorResponse.message = "Something went wrong while closing a task";
+    ErrorResponse.error = error;
+
+    return res.status(500).json(ErrorResponse);
+  }
+}
+
 async function destroy(req, res) {
   try {
     const response = await Task.destroy({
@@ -233,5 +264,6 @@ module.exports = {
   getActive,
   create,
   update,
+  close,
   destroy,
 };
