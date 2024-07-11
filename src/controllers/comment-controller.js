@@ -19,6 +19,11 @@ async function getAll(req, res) {
         taskId: req.query.taskId,
       });
     }
+    if (req.query.userId) {
+      filterArray.push({
+        userId: req.query.userId,
+      });
+    }
 
     const comments = await Comment.findAll({
       where: {
