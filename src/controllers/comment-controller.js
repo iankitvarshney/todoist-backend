@@ -1,6 +1,7 @@
 const { Op } = require("sequelize");
 
 const Comment = require("../models/comment");
+const Project = require("../models/project");
 const { ErrorResponse, SuccessResponse } = require("../utils/common");
 
 async function getAll(req, res) {
@@ -61,6 +62,12 @@ async function get(req, res) {
 async function create(req, res) {
   try {
     const comment = await Comment.create(req.body);
+    const project = await comment.getProject();
+
+    await Project.update(
+      { commentCount: project.commentCount + 1 },
+      { where: { id: project.id } }
+    );
 
     SuccessResponse.message = "Successfully created a comment";
     SuccessResponse.data = comment;
