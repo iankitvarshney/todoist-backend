@@ -261,9 +261,7 @@ async function close(req, res) {
 async function reopen(req, res) {
   try {
     const response = await Task.update(
-      {
-        isCompleted: false,
-      },
+      { isCompleted: false },
       {
         where: {
           [Op.and]: [{ id: req.params.id }, { isCompleted: true }],
@@ -275,6 +273,12 @@ async function reopen(req, res) {
       ErrorResponse.message = `No closed task is available with id ${req.params.id}`;
       ErrorResponse.data = {};
       return res.status(404).json(ErrorResponse);
+    }
+
+    let parentIds = [req.params.id];
+
+    while (parentIds.length > 0) {
+      parentIds = await handleOpenCloseSubtasks(parentIds, false);
     }
 
     SuccessResponse.message = "Successfully reopened a task";
