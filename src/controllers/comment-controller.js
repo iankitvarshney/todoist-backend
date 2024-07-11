@@ -81,8 +81,42 @@ async function create(req, res) {
   }
 }
 
+async function update(req, res) {
+  try {
+    const response = await Comment.update(
+      {
+        content: req.body.content,
+      },
+      {
+        where: {
+          id: req.params.id,
+        },
+      }
+    );
+
+    if (response[0] === 0) {
+      ErrorResponse.message = `No comment is available with id ${req.params.id}`;
+      ErrorResponse.data = {};
+      return res.status(404).json(ErrorResponse);
+    }
+
+    const comment = await Comment.findByPk(req.params.id);
+
+    SuccessResponse.message = "Successfully updated a comment";
+    SuccessResponse.data = comment;
+
+    return res.status(200).json(SuccessResponse);
+  } catch (error) {
+    ErrorResponse.message = "Something went wrong while updating a comment";
+    ErrorResponse.error = error;
+
+    return res.status(500).json(ErrorResponse);
+  }
+}
+
 module.exports = {
   getAll,
   get,
   create,
+  update,
 };
