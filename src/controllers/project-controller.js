@@ -1,9 +1,19 @@
+const { Op } = require("sequelize");
+
 const Project = require("../models/project");
 const { ErrorResponse, SuccessResponse } = require("../utils/common");
 
 async function getAll(req, res) {
   try {
-    const projects = await Project.findAll();
+    const filterArray = [];
+
+    if (req.query.parentId) {
+      filterArray.push({ parentId: req.query.parentId });
+    }
+
+    const projects = await Project.findAll({
+      where: { [Op.and]: filterArray },
+    });
 
     SuccessResponse.message = "Successfully fetched all projects";
     SuccessResponse.data = projects;
@@ -50,6 +60,7 @@ async function create(req, res) {
       viewStyle: req.body.viewStyle,
       url: req.body.url,
       userId: req.body.userId,
+      parentId: req.body.parentId,
     });
 
     SuccessResponse.message = "Successfully created a project";
