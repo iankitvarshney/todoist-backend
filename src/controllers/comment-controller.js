@@ -2,6 +2,7 @@ const { Op } = require("sequelize");
 
 const Comment = require("../models/comment");
 const Project = require("../models/project");
+const Task = require("../models/task");
 const { ErrorResponse, SuccessResponse } = require("../utils/common");
 
 async function getAll(req, res) {
@@ -62,12 +63,20 @@ async function get(req, res) {
 async function create(req, res) {
   try {
     const comment = await Comment.create(req.body);
-    const project = await comment.getProject();
 
-    await Project.update(
-      { commentCount: project.commentCount + 1 },
-      { where: { id: project.id } }
-    );
+    if (req.body.projectId) {
+      const project = await comment.getProject();
+      await Project.update(
+        { commentCount: project.commentCount + 1 },
+        { where: { id: project.id } }
+      );
+    } else if (req.body.taskId) {
+      const task = await comment.getTask();
+      await Task.update(
+        { commentCount: task.commentCount + 1 },
+        { where: { id: task.id } }
+      );
+    }
 
     SuccessResponse.message = "Successfully created a comment";
     SuccessResponse.data = comment;
@@ -123,17 +132,33 @@ async function update(req, res) {
 
 async function destroy(req, res) {
   try {
+    const comment = await Comment.findByPk(req.params.id);
+
+    if (comment === null) {
+      ErrorResponse.message = `No comment is available with id ${req.params.id}`;
+      ErrorResponse.data = {};
+      return res.status(404).json(ErrorResponse);
+    }
+
+    if (comment.projectId) {
+      const project = await comment.getProject();
+      await Project.update(
+        { commentCount: project.commentCount - 1 },
+        { where: { id: project.id } }
+      );
+    } else if (comment.taskId) {
+      const task = await comment.getTask();
+      await Task.update(
+        { commentCount: task.commentCount - 1 },
+        { where: { id: task.id } }
+      );
+    }
+
     const response = await Comment.destroy({
       where: {
         id: req.params.id,
       },
     });
-
-    if (response === 0) {
-      ErrorResponse.message = `No comment is available with id ${req.params.id}`;
-      ErrorResponse.data = {};
-      return res.status(404).json(ErrorResponse);
-    }
 
     SuccessResponse.message = "Successfully destroyed a comment";
     SuccessResponse.data = {};
