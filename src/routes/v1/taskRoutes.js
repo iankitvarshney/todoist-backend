@@ -9,6 +9,7 @@ const {
   getActive,
   create,
   update,
+  destroy,
 } = require("../../controllers/task-controller");
 
 const router = express.Router();
@@ -17,5 +18,6 @@ router.get("/", getAllActive);
 router.get("/:id", getActive);
 router.post("/", validateCreateRequest, create);
 router.patch("/:id", validateUpdateRequest, update);
+router.delete("/:id", destroy);
 
 module.exports = router;
