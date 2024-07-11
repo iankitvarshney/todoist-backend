@@ -200,12 +200,33 @@ async function update(req, res) {
   }
 }
 
+async function handleOpenCloseSubtasks(parentIds, value) {
+  try {
+    const tasks = await Task.findAll({
+      where: { parentId: parentIds },
+    });
+
+    const childIds = tasks.map((task) => task.id);
+
+    const response = await Task.update(
+      { isCompleted: value },
+      {
+        where: {
+          [Op.and]: [{ id: childIds }, { isCompleted: { [Op.ne]: value } }],
+        },
+      }
+    );
+
+    return childIds;
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function close(req, res) {
   try {
     const response = await Task.update(
-      {
-        isCompleted: true,
-      },
+      { isCompleted: true },
       {
         where: {
           [Op.and]: [{ id: req.params.id }, { isCompleted: false }],
@@ -217,6 +238,12 @@ async function close(req, res) {
       ErrorResponse.message = `No opened task is available with id ${req.params.id}`;
       ErrorResponse.data = {};
       return res.status(404).json(ErrorResponse);
+    }
+
+    let parentIds = [req.params.id];
+
+    while (parentIds.length > 0) {
+      parentIds = await handleOpenCloseSubtasks(parentIds, true);
     }
 
     SuccessResponse.message = "Successfully closed a task";
