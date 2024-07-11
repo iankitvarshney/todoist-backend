@@ -9,6 +9,17 @@ function validateCreateRequest(req, res, next) {
   next();
 }
 
+function validateUpdateRequest(req, res, next) {
+  if (Object.keys(req.body).length === 0) {
+    ErrorResponse.message = "Request body should not be empty";
+    ErrorResponse.data = {};
+    return res.status(400).json(ErrorResponse);
+  }
+
+  next();
+}
+
 module.exports = {
   validateCreateRequest,
+  validateUpdateRequest,
 };
