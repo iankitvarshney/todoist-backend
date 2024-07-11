@@ -83,8 +83,59 @@ async function create(req, res) {
   }
 }
 
+async function update(req, res) {
+  try {
+    const response = await Label.update(
+      {
+        name: req.body.name,
+        color: req.body.color,
+        order: req.body.order,
+        isFavorite: req.body.isFavorite,
+      },
+      {
+        where: {
+          id: req.params.id,
+        },
+      }
+    );
+
+    if (response[0] === 0) {
+      ErrorResponse.message = `No label is available with id ${req.params.id}`;
+      ErrorResponse.data = {};
+      return res.status(404).json(ErrorResponse);
+    }
+
+    const label = await Label.findByPk(req.params.id);
+
+    SuccessResponse.message = "Successfully updated a label";
+    SuccessResponse.data = label;
+
+    return res.status(200).json(SuccessResponse);
+  } catch (error) {
+    if (error.name === "SequelizeUniqueConstraintError") {
+      ErrorResponse.message = error.errors[0].message;
+      ErrorResponse.error = error;
+
+      return res.status(400).json(ErrorResponse);
+    }
+
+    if (error.name === "SequelizeDatabaseError") {
+      ErrorResponse.message = "Some parameter value is not correct";
+      ErrorResponse.error = error;
+
+      return res.status(400).json(ErrorResponse);
+    }
+
+    ErrorResponse.message = "Something went wrong while updating a label";
+    ErrorResponse.error = error;
+
+    return res.status(500).json(ErrorResponse);
+  }
+}
+
 module.exports = {
   getAll,
   get,
   create,
+  update,
 };
