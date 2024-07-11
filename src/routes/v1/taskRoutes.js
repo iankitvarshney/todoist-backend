@@ -10,6 +10,7 @@ const {
   create,
   update,
   close,
+  reopen,
   destroy,
 } = require("../../controllers/task-controller");
 
@@ -20,6 +21,7 @@ router.get("/:id", getActive);
 router.post("/", validateCreateRequest, create);
 router.patch("/:id", validateUpdateRequest, update);
 router.patch("/:id/close", close);
+router.patch("/:id/reopen", reopen);
 router.delete("/:id", destroy);
 
 module.exports = router;
