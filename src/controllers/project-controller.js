@@ -86,12 +86,6 @@ async function update(req, res) {
       },
     });
 
-    if (Object.keys(req.body).length === 0) {
-      SuccessResponse.message = "Request body should not be empty";
-      SuccessResponse.data = {};
-      return res.status(400).json(SuccessResponse);
-    }
-
     if (response[0] === 0) {
       SuccessResponse.message = `No project is available with id ${req.params.id}`;
       SuccessResponse.data = {};
