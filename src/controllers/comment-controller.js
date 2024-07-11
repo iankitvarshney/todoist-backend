@@ -36,6 +36,28 @@ async function getAll(req, res) {
   }
 }
 
+async function get(req, res) {
+  try {
+    const comment = await Comment.findByPk(req.params.id);
+
+    if (comment === null) {
+      ErrorResponse.message = `No comment is available with id ${req.params.id}`;
+      ErrorResponse.data = {};
+      return res.status(404).json(ErrorResponse);
+    }
+
+    SuccessResponse.message = "Successfully fetched a comment";
+    SuccessResponse.data = comment;
+
+    return res.status(200).json(SuccessResponse);
+  } catch (error) {
+    ErrorResponse.message = "Something went wrong while fetching a comment";
+    ErrorResponse.error = error;
+
+    return res.status(500).json(ErrorResponse);
+  }
+}
+
 async function create(req, res) {
   try {
     const comment = await Comment.create(req.body);
@@ -61,5 +83,6 @@ async function create(req, res) {
 
 module.exports = {
   getAll,
+  get,
   create,
 };
