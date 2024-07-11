@@ -31,6 +31,28 @@ async function getAll(req, res) {
   }
 }
 
+async function get(req, res) {
+  try {
+    const label = await Label.findByPk(req.params.id);
+
+    if (label === null) {
+      ErrorResponse.message = `No label is available with id ${req.params.id}`;
+      ErrorResponse.data = {};
+      return res.status(404).json(ErrorResponse);
+    }
+
+    SuccessResponse.message = "Successfully fetched a label";
+    SuccessResponse.data = label;
+
+    return res.status(200).json(SuccessResponse);
+  } catch (error) {
+    ErrorResponse.message = "Something went wrong while fetching a label";
+    ErrorResponse.error = error;
+
+    return res.status(500).json(ErrorResponse);
+  }
+}
+
 async function create(req, res) {
   try {
     const label = await Label.create(req.body);
@@ -63,5 +85,6 @@ async function create(req, res) {
 
 module.exports = {
   getAll,
+  get,
   create,
 };
