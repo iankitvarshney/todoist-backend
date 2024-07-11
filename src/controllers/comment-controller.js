@@ -114,9 +114,36 @@ async function update(req, res) {
   }
 }
 
+async function destroy(req, res) {
+  try {
+    const response = await Comment.destroy({
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    if (response === 0) {
+      ErrorResponse.message = `No comment is available with id ${req.params.id}`;
+      ErrorResponse.data = {};
+      return res.status(404).json(ErrorResponse);
+    }
+
+    SuccessResponse.message = "Successfully destroyed a comment";
+    SuccessResponse.data = {};
+
+    return res.status(200).json(SuccessResponse);
+  } catch (error) {
+    ErrorResponse.message = "Something went wrong while destroying a comment";
+    ErrorResponse.error = error;
+
+    return res.status(500).json(ErrorResponse);
+  }
+}
+
 module.exports = {
   getAll,
   get,
   create,
   update,
+  destroy,
 };
