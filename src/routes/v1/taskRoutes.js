@@ -6,8 +6,8 @@ const {
 } = require("../../middlewares/task-middlewares");
 const {
   getAllActive,
-  getTaskLabels,
   getActive,
+  getTaskLabels,
   create,
   update,
   close,
