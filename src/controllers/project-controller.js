@@ -52,9 +52,9 @@ async function get(req, res) {
     const project = await Project.findByPk(req.params.id);
 
     if (project === null) {
-      SuccessResponse.message = `No project is available with id ${req.params.id}`;
-      SuccessResponse.data = {};
-      return res.status(404).json(SuccessResponse);
+      ErrorResponse.message = `No project is available with id ${req.params.id}`;
+      ErrorResponse.data = {};
+      return res.status(404).json(ErrorResponse);
     }
 
     SuccessResponse.message = "Successfully fetched a project";
@@ -118,9 +118,9 @@ async function update(req, res) {
     });
 
     if (response[0] === 0) {
-      SuccessResponse.message = `No project is available with id ${req.params.id}`;
-      SuccessResponse.data = {};
-      return res.status(404).json(SuccessResponse);
+      ErrorResponse.message = `No project is available with id ${req.params.id}`;
+      ErrorResponse.data = {};
+      return res.status(404).json(ErrorResponse);
     }
 
     const project = await Project.findByPk(req.params.id);
@@ -160,9 +160,9 @@ async function destroy(req, res) {
     });
 
     if (response === 0) {
-      SuccessResponse.message = `No project is available with id ${req.params.id}`;
-      SuccessResponse.data = {};
-      return res.status(404).json(SuccessResponse);
+      ErrorResponse.message = `No project is available with id ${req.params.id}`;
+      ErrorResponse.data = {};
+      return res.status(404).json(ErrorResponse);
     }
 
     SuccessResponse.message = "Successfully destroyed a project";

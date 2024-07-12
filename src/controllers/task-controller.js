@@ -74,9 +74,9 @@ async function get(req, res) {
     const task = await Task.findByPk(req.params.id);
 
     if (task === null) {
-      SuccessResponse.message = `No task is available with id ${req.params.id}`;
-      SuccessResponse.data = {};
-      return res.status(404).json(SuccessResponse);
+      ErrorResponse.message = `No task is available with id ${req.params.id}`;
+      ErrorResponse.data = {};
+      return res.status(404).json(ErrorResponse);
     }
 
     SuccessResponse.message = "Successfully fetched a task";
@@ -100,9 +100,9 @@ async function getActive(req, res) {
     });
 
     if (task === null) {
-      SuccessResponse.message = `No task is available with id ${req.params.id}`;
-      SuccessResponse.data = {};
-      return res.status(404).json(SuccessResponse);
+      ErrorResponse.message = `No task is available with id ${req.params.id}`;
+      ErrorResponse.data = {};
+      return res.status(404).json(ErrorResponse);
     }
 
     SuccessResponse.message = "Successfully fetched a task";
@@ -122,9 +122,9 @@ async function getTaskLabels(req, res) {
     const task = await Task.findByPk(req.params.id);
 
     if (task === null) {
-      SuccessResponse.message = `No task is available with id ${req.params.id}`;
-      SuccessResponse.data = {};
-      return res.status(404).json(SuccessResponse);
+      ErrorResponse.message = `No task is available with id ${req.params.id}`;
+      ErrorResponse.data = {};
+      return res.status(404).json(ErrorResponse);
     }
 
     const labels = await task.getLabels();

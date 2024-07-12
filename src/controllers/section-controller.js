@@ -36,9 +36,9 @@ async function get(req, res) {
     const section = await Section.findByPk(req.params.id);
 
     if (section === null) {
-      SuccessResponse.message = `No section is available with id ${req.params.id}`;
-      SuccessResponse.data = {};
-      return res.status(404).json(SuccessResponse);
+      ErrorResponse.message = `No section is available with id ${req.params.id}`;
+      ErrorResponse.data = {};
+      return res.status(404).json(ErrorResponse);
     }
 
     SuccessResponse.message = "Successfully fetched a section";
@@ -92,9 +92,9 @@ async function update(req, res) {
     });
 
     if (response[0] === 0) {
-      SuccessResponse.message = `No section is available with id ${req.params.id}`;
-      SuccessResponse.data = {};
-      return res.status(404).json(SuccessResponse);
+      ErrorResponse.message = `No section is available with id ${req.params.id}`;
+      ErrorResponse.data = {};
+      return res.status(404).json(ErrorResponse);
     }
 
     const section = await Section.findByPk(req.params.id);
@@ -134,9 +134,9 @@ async function destroy(req, res) {
     });
 
     if (response === 0) {
-      SuccessResponse.message = `No section is available with id ${req.params.id}`;
-      SuccessResponse.data = {};
-      return res.status(404).json(SuccessResponse);
+      ErrorResponse.message = `No section is available with id ${req.params.id}`;
+      ErrorResponse.data = {};
+      return res.status(404).json(ErrorResponse);
     }
 
     SuccessResponse.message = "Successfully destroyed a section";
