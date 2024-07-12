@@ -28,7 +28,7 @@ const Project = sequelize.define("Project", {
   },
   isInboxProject: {
     type: DataTypes.BOOLEAN,
-    defaultValue: true,
+    defaultValue: false,
   },
   viewStyle: {
     type: DataTypes.STRING,
