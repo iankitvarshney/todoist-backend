@@ -2,6 +2,7 @@ const { DataTypes } = require("sequelize");
 
 const sequelize = require("../config/config");
 const User = require("../models/user");
+const Task = require("../models/task");
 
 const Label = sequelize.define("Label", {
   name: {
@@ -30,5 +31,8 @@ User.hasMany(Label, {
 Label.belongsTo(User, {
   foreignKey: "userId",
 });
+
+Task.belongsToMany(Label, { through: "TaskLabel" });
+Label.belongsToMany(Task, { through: "TaskLabel" });
 
 module.exports = Label;
