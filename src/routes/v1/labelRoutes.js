@@ -7,6 +7,7 @@ const {
 const {
   getAll,
   get,
+  getLabelTasks,
   create,
   update,
   destroy,
@@ -16,6 +17,7 @@ const router = express.Router();
 
 router.get("/", getAll);
 router.get("/:id", get);
+router.get("/:id/tasks", getLabelTasks);
 router.post("/", validateCreateRequest, create);
 router.patch("/:id", validateUpdateRequest, update);
 router.delete("/:id", destroy);
