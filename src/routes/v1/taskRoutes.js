@@ -6,6 +6,7 @@ const {
 } = require("../../middlewares/task-middlewares");
 const {
   getAllActive,
+  getTaskLabels,
   getActive,
   create,
   update,
@@ -18,6 +19,7 @@ const router = express.Router();
 
 router.get("/", getAllActive);
 router.get("/:id", getActive);
+router.get("/:id/labels", getTaskLabels);
 router.post("/", validateCreateRequest, create);
 router.patch("/:id", validateUpdateRequest, update);
 router.patch("/:id/close", close);

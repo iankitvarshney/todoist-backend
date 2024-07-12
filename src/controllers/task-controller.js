@@ -69,6 +69,31 @@ async function getAllActive(req, res) {
   }
 }
 
+async function getTaskLabels(req, res) {
+  try {
+    const task = await Task.findByPk(req.params.id);
+
+    if (task === null) {
+      SuccessResponse.message = `No task is available with id ${req.params.id}`;
+      SuccessResponse.data = {};
+      return res.status(404).json(SuccessResponse);
+    }
+
+    const labels = await task.getLabels();
+
+    SuccessResponse.message = "Successfully fetched all labels of a task";
+    SuccessResponse.data = labels;
+
+    return res.status(200).json(SuccessResponse);
+  } catch (error) {
+    ErrorResponse.message =
+      "Something went wrong while fetching all labels of a task";
+    ErrorResponse.error = error;
+
+    return res.status(500).json(ErrorResponse);
+  }
+}
+
 async function get(req, res) {
   try {
     const task = await Task.findByPk(req.params.id);
@@ -322,6 +347,7 @@ async function destroy(req, res) {
 module.exports = {
   getAll,
   getAllActive,
+  getTaskLabels,
   get,
   getActive,
   create,
