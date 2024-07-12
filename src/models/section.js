@@ -18,6 +18,8 @@ const Section = sequelize.define("Section", {
 
 Project.hasMany(Section, {
   foreignKey: "projectId",
+  onUpdate: "CASCADE",
+  onDelete: "CASCADE",
 });
 Section.belongsTo(Project, {
   foreignKey: "projectId",

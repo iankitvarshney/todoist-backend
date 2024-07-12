@@ -42,6 +42,8 @@ const Project = sequelize.define("Project", {
 
 Project.hasMany(Project, {
   foreignKey: "parentId",
+  onUpdate: "CASCADE",
+  onDelete: "CASCADE",
 });
 Project.belongsTo(Project, {
   foreignKey: "parentId",
@@ -49,6 +51,8 @@ Project.belongsTo(Project, {
 
 User.hasMany(Project, {
   foreignKey: "userId",
+  onUpdate: "CASCADE",
+  onDelete: "CASCADE",
 });
 Project.belongsTo(User, {
   foreignKey: "userId",

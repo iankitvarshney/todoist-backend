@@ -14,6 +14,8 @@ const Comment = sequelize.define("Comment", {
 
 Project.hasMany(Comment, {
   foreignKey: "projectId",
+  onUpdate: "CASCADE",
+  onDelete: "CASCADE",
 });
 Comment.belongsTo(Project, {
   foreignKey: "projectId",
@@ -21,6 +23,8 @@ Comment.belongsTo(Project, {
 
 Task.hasMany(Comment, {
   foreignKey: "taskId",
+  onUpdate: "CASCADE",
+  onDelete: "CASCADE",
 });
 Comment.belongsTo(Task, {
   foreignKey: "taskId",
@@ -28,6 +32,8 @@ Comment.belongsTo(Task, {
 
 User.hasMany(Comment, {
   foreignKey: "userId",
+  onUpdate: "CASCADE",
+  onDelete: "CASCADE",
 });
 Comment.belongsTo(User, {
   foreignKey: "userId",

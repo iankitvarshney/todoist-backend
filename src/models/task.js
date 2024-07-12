@@ -41,6 +41,8 @@ const Task = sequelize.define("Task", {
 
 Task.hasMany(Task, {
   foreignKey: "parentId",
+  onUpdate: "CASCADE",
+  onDelete: "CASCADE",
 });
 Task.belongsTo(Task, {
   foreignKey: "parentId",
@@ -48,6 +50,8 @@ Task.belongsTo(Task, {
 
 Project.hasMany(Task, {
   foreignKey: "projectId",
+  onUpdate: "CASCADE",
+  onDelete: "CASCADE",
 });
 Task.belongsTo(Project, {
   foreignKey: "projectId",
@@ -55,6 +59,8 @@ Task.belongsTo(Project, {
 
 Section.hasMany(Task, {
   foreignKey: "sectionId",
+  onUpdate: "CASCADE",
+  onDelete: "CASCADE",
 });
 Task.belongsTo(Section, {
   foreignKey: "sectionId",
@@ -62,6 +68,8 @@ Task.belongsTo(Section, {
 
 User.hasMany(Task, {
   foreignKey: "creatorId",
+  onUpdate: "CASCADE",
+  onDelete: "CASCADE",
 });
 Task.belongsTo(User, {
   foreignKey: "creatorId",

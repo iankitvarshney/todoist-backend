@@ -26,6 +26,8 @@ const Label = sequelize.define("Label", {
 
 User.hasMany(Label, {
   foreignKey: "userId",
+  onUpdate: "CASCADE",
+  onDelete: "CASCADE",
 });
 Label.belongsTo(User, {
   foreignKey: "userId",
