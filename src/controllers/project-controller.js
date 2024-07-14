@@ -28,25 +28,6 @@ async function getAll(req, res) {
   }
 }
 
-async function getAllTasks(req, res) {
-  try {
-    const tasks = await Task.findAll({
-      where: { projectId: req.params.id },
-    });
-
-    SuccessResponse.message = "Successfully fetched all tasks of a project";
-    SuccessResponse.data = tasks;
-
-    return res.status(200).json(SuccessResponse);
-  } catch (error) {
-    ErrorResponse.message =
-      "Something went wrong while fetching all tasks of a project";
-    ErrorResponse.error = error;
-
-    return res.status(500).json(ErrorResponse);
-  }
-}
-
 async function get(req, res) {
   try {
     const project = await Project.findByPk(req.params.id);
@@ -63,6 +44,25 @@ async function get(req, res) {
     return res.status(200).json(SuccessResponse);
   } catch (error) {
     ErrorResponse.message = "Something went wrong while fetching a project";
+    ErrorResponse.error = error;
+
+    return res.status(500).json(ErrorResponse);
+  }
+}
+
+async function getAllTasks(req, res) {
+  try {
+    const tasks = await Task.findAll({
+      where: { projectId: req.params.id },
+    });
+
+    SuccessResponse.message = "Successfully fetched all tasks of a project";
+    SuccessResponse.data = tasks;
+
+    return res.status(200).json(SuccessResponse);
+  } catch (error) {
+    ErrorResponse.message =
+      "Something went wrong while fetching all tasks of a project";
     ErrorResponse.error = error;
 
     return res.status(500).json(ErrorResponse);
@@ -179,8 +179,8 @@ async function destroy(req, res) {
 
 module.exports = {
   getAll,
-  getAllTasks,
   get,
+  getAllTasks,
   create,
   update,
   destroy,

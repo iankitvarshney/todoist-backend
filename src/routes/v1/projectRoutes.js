@@ -6,8 +6,8 @@ const {
 } = require("../../middlewares/project-middlewares");
 const {
   getAll,
-  getAllTasks,
   get,
+  getAllTasks,
   create,
   update,
   destroy,
@@ -16,8 +16,8 @@ const {
 const router = express.Router();
 
 router.get("/", getAll);
-router.get("/:id/tasks", getAllTasks);
 router.get("/:id", get);
+router.get("/:id/tasks", getAllTasks);
 router.post("/", validateCreateRequest, create);
 router.patch("/:id", validateUpdateRequest, update);
 router.delete("/:id", destroy);
