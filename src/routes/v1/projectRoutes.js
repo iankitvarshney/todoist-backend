@@ -6,6 +6,7 @@ const {
 } = require("../../middlewares/project-middlewares");
 const {
   getAll,
+  getInboxProject,
   get,
   getAllTasks,
   create,
@@ -16,6 +17,7 @@ const {
 const router = express.Router();
 
 router.get("/", getAll);
+router.get("/inbox", getInboxProject);
 router.get("/:id", get);
 router.get("/:id/tasks", getAllTasks);
 router.post("/", validateCreateRequest, create);

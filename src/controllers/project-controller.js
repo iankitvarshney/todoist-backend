@@ -28,6 +28,33 @@ async function getAll(req, res) {
   }
 }
 
+async function getInboxProject(req, res) {
+  try {
+    const projects = await Project.findAll({
+      where: {
+        isInboxProject: true,
+      },
+    });
+
+    if (projects.length === 0) {
+      ErrorResponse.message = "No inbox project is available";
+      ErrorResponse.data = {};
+      return res.status(404).json(ErrorResponse);
+    }
+
+    SuccessResponse.message = "Successfully fetched an inbox project";
+    SuccessResponse.data = projects[0];
+
+    return res.status(200).json(SuccessResponse);
+  } catch (error) {
+    ErrorResponse.message =
+      "Something went wrong while fetching an inbox project";
+    ErrorResponse.error = error;
+
+    return res.status(500).json(ErrorResponse);
+  }
+}
+
 async function get(req, res) {
   try {
     const project = await Project.findByPk(req.params.id);
@@ -179,6 +206,7 @@ async function destroy(req, res) {
 
 module.exports = {
   getAll,
+  getInboxProject,
   get,
   getAllTasks,
   create,
